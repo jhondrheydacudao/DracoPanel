@@ -9,70 +9,88 @@
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,300,600,400,700&display=swap" rel="stylesheet">
   <style>
     .dark-mode {
-      background: #111;
+      background: #0d0d0d;
       color: white;
     }
     .form-container {
       background: #1e1e1e;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      animation: slideIn 0.6s ease-in-out;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.5s ease-in-out;
+      width: 400px;
     }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-20px); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .input-field {
-      background: #2c2c2c;
-      border: 1px solid #444;
+      background: #2a2a2a;
+      border: 1px solid #555;
       color: white;
-      transition: transform 0.2s ease-in-out;
+      padding: 12px;
+      transition: all 0.3s ease-in-out;
+      border-radius: 8px;
     }
     .input-field:focus {
-      transform: scale(1.02);
-      border-color: #2563eb;
+      transform: scale(1.04);
+      border-color: #4f46e5;
+      box-shadow: 0 0 10px rgba(79, 70, 229, 0.8);
     }
     .input-field::placeholder {
-      color: #888;
+      color: #bbb;
     }
     .submit-btn {
-      background: #2563eb;
-      transition: background 0.3s, transform 0.3s ease-in-out;
-      margin-top: 15px;
+      background: #4f46e5;
+      transition: all 0.3s ease-in-out;
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 1rem;
     }
     .submit-btn:hover {
-      background: #1d4ed8;
-      transform: scale(1.1);
+      background: #4338ca;
+      transform: scale(1.07);
     }
     .submit-btn:active {
-      transform: scale(0.95);
+      transform: scale(0.96);
+    }
+    .label-left {
+      text-align: left;
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 5px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
   </style>
 </head>
 <body class="dark-mode h-full flex items-center justify-center">
   <div class="min-h-screen flex items-center justify-center">
-    <div class="form-container w-96 text-center">
-      <h2 class="text-2xl font-bold">Create an Account</h2>
-      <p class="text-gray-400 text-sm mb-4">Join us by filling in the details below.</p>
+    <div class="form-container text-center">
+      <h2 class="text-3xl font-bold mb-2">Create an Account</h2>
+      <p class="text-gray-400 text-base mb-4">Join us by filling in the details below.</p>
       <form method="POST" action="/auth/register" class="space-y-4">
-        <div>
-          <label for="username" class="block text-sm font-medium text-gray-300 text-left">Username</label>
-          <input placeholder="example" id="username" name="username" required class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
+        <div class="form-group">
+          <label for="username" class="label-left text-gray-300">Username</label>
+          <input placeholder="Your username" id="username" name="username" required class="input-field w-full focus:outline-none">
+        </div>
+        <div class="form-group">
+          <label for="email" class="label-left text-gray-300">Email</label>
+          <input placeholder="you@example.com" id="email" name="email" required class="input-field w-full focus:outline-none">
+        </div>
+        <div class="form-group">
+          <label for="password" class="label-left text-gray-300">Password</label>
+          <input placeholder="●●●●●●●●" id="password" name="password" type="password" required class="input-field w-full focus:outline-none">
         </div>
         <div>
-          <label for="email" class="block text-sm font-medium text-gray-300 text-left">Email</label>
-          <input placeholder="example@domain.com" id="email" name="email" required class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-300 text-left">Password</label>
-          <input placeholder="********" id="password" name="password" type="password" required class="input-field w-full px-4 py-2 rounded-lg focus:outline-none">
-        </div>
-        <div>
-          <button type="submit" class="submit-btn w-full py-2 text-white font-medium rounded-lg">Register</button>
+          <button type="submit" class="submit-btn w-full text-white font-medium">Register</button>
         </div>
       </form>
-      <p class="text-sm text-gray-400 mt-4">Already have an account? <a href="/login" class="text-blue-400">Sign in</a></p>
+      <p class="text-sm text-gray-400 mt-4">Already have an account? <a href="/login" class="text-blue-400 hover:text-blue-300">Sign in</a></p>
     </div>
   </div>
 </body>
