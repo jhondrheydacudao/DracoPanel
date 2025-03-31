@@ -42,89 +42,112 @@
       </div>
     <% } %>
 
-    <!-- Nodes Table -->
-    <div class="px-8 mt-6">
-      <div class="overflow-hidden rounded-xl border border-white/10 bg-white/5 shadow-sm">
-        <!-- Table Header -->
-        <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-white/5 text-sm font-medium text-white/70 border-b border-white/10">
-          <div class="col-span-3"><%= req.translations.name %></div>
-          <div class="col-span-2">Status</div>
-          <div class="col-span-2">Version</div>
-          <div class="col-span-3"><%= req.translations.connection %></div>
-          <div class="col-span-2 text-right"><%= req.translations.actions %></div>
-        </div>
-
-        <!-- Nodes List -->
-        <div class="divide-y divide-white/10">
-          <% nodes.forEach(function(node) { %>
-            <div class="grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-white/5 transition-colors duration-150">
-              <!-- Name -->
-              <div class="col-span-3 flex items-center space-x-3">
-                <div class="flex-shrink-0">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-                  </svg>
-                </div>
-                <div>
-                  <div class="font-medium text-white"><%= node.name %></div>
-                  <% if (node.tags) { %>
-                    <div class="flex flex-wrap gap-1 mt-1">
-                      <% node.tags.split(' - ').forEach(tag => { %>
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-500/10 text-indigo-300">
-                          <%= tag %>
-                        </span>
-                      <% }); %>
-                    </div>
-                  <% } %>
-                </div>
-              </div>
-
-              <!-- Status -->
-              <div class="col-span-2">
-                <% if (node.status == "Online") { %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-300">
-                    <span class="flex w-2 h-2 mr-1.5 rounded-full bg-emerald-400"></span>
-                    Online
-                  </span>
-                <% } else { %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-300">
-                    <span class="flex w-2 h-2 mr-1.5 rounded-full bg-red-400"></span>
-                    Offline
-                  </span>
-                <% } %>
-              </div>
-
-              <!-- Version -->
-              <div class="col-span-2">
-                <code class="text-sm font-mono bg-white/5 px-2 py-1 rounded text-white/80">
-                  <%= (node.versionRelease || 'unknown').replace('HydraD ', '').trim() %>
-                </code>
-              </div>
-
-              <!-- Connection -->
-              <div class="col-span-3">
-                <div class="flex items-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/50 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  <span class="text-sm text-white/80"><%= node.address %>:<%= node.port %></span>
-                </div>
-              </div>
-
-              <!-- Actions -->
-              <div class="col-span-2 flex justify-end space-x-2">
-                <button onclick="configure('<%= node.id %>')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Configure
-                </button>
-                <button onclick="deletenode('<%= node.id %>')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-500/90 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                  Remove
-                </button>
-              </div>
+    <!-- Empty State -->
+    <% if (nodes.length === 0) { %>
+      <div class="px-8 mt-12 text-center">
+        <div class="max-w-md mx-auto p-8 rounded-xl border border-dashed border-white/20 bg-white/5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+          </svg>
+          <h3 class="mt-4 text-lg font-medium text-white">No nodes configured</h3>
+          <p class="mt-2 text-sm text-white/60">Get started by adding your first server node to the system</p>
+          <% if (req.user.admin === true) { %>
+            <div class="mt-6">
+              <button id="emptyStateCreateBtn" type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-1 mr-2 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                </svg>
+                Create Node
+              </button>
             </div>
-          <% }); %>
+          <% } %>
         </div>
       </div>
-    </div>
+    <% } else { %>
+      <!-- Nodes Table -->
+      <div class="px-8 mt-6">
+        <div class="overflow-hidden rounded-xl border border-white/10 bg-white/5 shadow-sm">
+          <!-- Table Header -->
+          <div class="grid grid-cols-12 gap-4 px-6 py-3 bg-white/5 text-sm font-medium text-white/70 border-b border-white/10">
+            <div class="col-span-3"><%= req.translations.name %></div>
+            <div class="col-span-2">Status</div>
+            <div class="col-span-2">Version</div>
+            <div class="col-span-3"><%= req.translations.connection %></div>
+            <div class="col-span-2 text-right"><%= req.translations.actions %></div>
+          </div>
+
+          <!-- Nodes List -->
+          <div class="divide-y divide-white/10">
+            <% nodes.forEach(function(node) { %>
+              <div class="grid grid-cols-12 gap-4 items-center px-6 py-4 hover:bg-white/5 transition-colors duration-150">
+                <!-- Name -->
+                <div class="col-span-3 flex items-center space-x-3">
+                  <div class="flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-medium text-white"><%= node.name %></div>
+                    <% if (node.tags) { %>
+                      <div class="flex flex-wrap gap-1 mt-1">
+                        <% node.tags.split(' - ').forEach(tag => { %>
+                          <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-500/10 text-indigo-300">
+                            <%= tag %>
+                          </span>
+                        <% }); %>
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+
+                <!-- Status -->
+                <div class="col-span-2">
+                  <% if (node.status == "Online") { %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-300">
+                      <span class="flex w-2 h-2 mr-1.5 rounded-full bg-emerald-400"></span>
+                      Online
+                    </span>
+                  <% } else { %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-300">
+                      <span class="flex w-2 h-2 mr-1.5 rounded-full bg-red-400"></span>
+                      Offline
+                    </span>
+                  <% } %>
+                </div>
+
+                <!-- Version -->
+                <div class="col-span-2">
+                  <code class="text-sm font-mono bg-white/5 px-2 py-1 rounded text-white/80">
+                    <%= (node.versionRelease || 'unknown').replace('HydraD ', '').trim() %>
+                  </code>
+                </div>
+
+                <!-- Connection -->
+                <div class="col-span-3">
+                  <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white/50 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    <span class="text-sm text-white/80"><%= node.address %>:<%= node.port %></span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="col-span-2 flex justify-end space-x-2">
+                  <button onclick="configure('<%= node.id %>')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Configure
+                  </button>
+                  <button onclick="deletenode('<%= node.id %>')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-red-500/90 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      </div>
+    <% } %>
 
     <!-- Create Node Form (Hidden by default) -->
     <div id="nodeForm" class="mt-6 px-8 w-full hidden">
@@ -135,26 +158,26 @@
             <!-- Node Name -->
             <div>
               <label for="nodeName" class="block text-sm font-medium text-white/80 mb-1"><%= req.translations.name %></label>
-              <input id="nodeName" type="text" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g. US-East-01">
+              <input id="nodeName" type="text" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g. US-East-01" required>
             </div>
 
             <!-- Node Address -->
             <div>
               <label for="nodeAddress" class="block text-sm font-medium text-white/80 mb-1"><%= req.translations.addressIP %></label>
-              <input id="nodeAddress" type="text" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="192.168.1.1 or node.example.com">
+              <input id="nodeAddress" type="text" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="192.168.1.1 or node.example.com" required>
             </div>
 
             <!-- Node Port -->
             <div>
               <label for="nodePort" class="block text-sm font-medium text-white/80 mb-1"><%= req.translations.deamonPort %></label>
-              <input id="nodePort" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="3002" value="3002">
+              <input id="nodePort" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="3002" value="3002" min="1" max="65535" required>
             </div>
 
             <!-- Node RAM -->
             <div>
               <label for="nodeRam" class="block text-sm font-medium text-white/80 mb-1"><%= req.translations.ram %> (MB)</label>
               <div class="relative">
-                <input id="nodeRam" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="10240" value="10240">
+                <input id="nodeRam" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="10240" value="10240" min="256" required>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-sm text-white/50">MB</div>
               </div>
             </div>
@@ -163,7 +186,7 @@
             <div>
               <label for="nodeDisk" class="block text-sm font-medium text-white/80 mb-1"><%= req.translations.disk %> (GB)</label>
               <div class="relative">
-                <input id="nodeDisk" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="100" value="100">
+                <input id="nodeDisk" type="number" class="block w-full px-3 py-2 bg-white/5 border border-white/10 rounded-md shadow-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="100" value="100" min="1" required>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-sm text-white/50">GB</div>
               </div>
             </div>
@@ -185,6 +208,7 @@
                 </button>
               </div>
               <p class="mt-1 text-xs text-white/50">Tags help organize your nodes (e.g. location, purpose)</p>
+              <input type="hidden" id="tagsHidden" name="tags">
             </div>
           </div>
 
@@ -193,7 +217,7 @@
             <button type="button" id="cancelCreateBtn" class="px-4 py-2 border border-white/10 rounded-md shadow-sm text-sm font-medium text-white bg-transparent hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Cancel
             </button>
-            <button type="button" id="createNodeBtn" class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <button type="submit" id="createNodeBtn" class="inline-flex justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               Create Node
             </button>
           </div>
@@ -244,20 +268,44 @@
   </div>
 </div>
 
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm">
+  <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-indigo-500"></div>
+</div>
+
 <script>
   // Toggle Node Form
-  document.getElementById('createButton').addEventListener('click', function() {
+  document.getElementById('createButton')?.addEventListener('click', function() {
     document.getElementById('nodeForm').classList.toggle('hidden');
     document.getElementById('nodeForm').scrollIntoView({ behavior: 'smooth' });
   });
 
-  document.getElementById('cancelCreateBtn').addEventListener('click', function() {
+  document.getElementById('emptyStateCreateBtn')?.addEventListener('click', function() {
+    document.getElementById('nodeForm').classList.toggle('hidden');
+    document.getElementById('nodeForm').scrollIntoView({ behavior: 'smooth' });
+  });
+
+  document.getElementById('cancelCreateBtn')?.addEventListener('click', function() {
     document.getElementById('nodeForm').classList.add('hidden');
   });
+
+  // Show loading spinner
+  function showLoading() {
+    document.getElementById('loadingSpinner').classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  // Hide loading spinner
+  function hideLoading() {
+    document.getElementById('loadingSpinner').classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+  }
 
   // Node Deletion
   async function deletenode(nodeId) {
     if (!confirm('Are you sure you want to delete this node?')) return;
+    
+    showLoading();
     
     try {
       let response = await fetch('/nodes/delete', {
@@ -275,6 +323,7 @@
         const confirmDelete = confirm('There are still instances on this node. Deleting it will also remove all associated instances. Continue?');
 
         if (confirmDelete) {
+          showLoading();
           response = await fetch(`/nodes/delete?deleteinstances=true`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -286,17 +335,24 @@
           if (response.ok) {
             alert('Node and instances successfully deleted');
             window.location.reload();
-          } 
+          } else {
+            alert(result.message || 'Failed to delete node');
+          }
         }
+      } else {
+        alert(result.message || 'Failed to delete node');
       }
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to delete node');
+    } finally {
+      hideLoading();
     }
   }
 
   // Node Configuration
   async function configure(nodeId) {
+    showLoading();
     try {
       const response = await fetch(`/admin/node/${nodeId}/configure-command`);
       if (!response.ok) throw new Error('Failed to fetch configure command');
@@ -306,6 +362,8 @@
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to get configuration command');
+    } finally {
+      hideLoading();
     }
   }
 
@@ -339,6 +397,8 @@
           </svg>
         `;
       }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy command:', err);
     });
   }
 
@@ -346,9 +406,20 @@
   function addTag() {
     const input = document.getElementById('tagInput');
     const container = document.getElementById('tagContainer');
+    const hiddenInput = document.getElementById('tagsHidden');
     const value = input.value.trim();
     
     if (value) {
+      // Check if tag already exists
+      const existingTags = Array.from(container.children).map(tag => 
+        tag.textContent.replace('×', '').trim()
+      );
+      
+      if (existingTags.includes(value)) {
+        alert('This tag already exists');
+        return;
+      }
+      
       const tag = document.createElement('span');
       tag.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-300';
       tag.textContent = value;
@@ -356,15 +427,28 @@
       const removeBtn = document.createElement('button');
       removeBtn.className = 'ml-1.5 text-indigo-400 hover:text-indigo-300';
       removeBtn.innerHTML = '&times;';
-      removeBtn.onclick = () => tag.remove();
+      removeBtn.onclick = () => {
+        tag.remove();
+        updateHiddenTags();
+      };
       
       tag.appendChild(removeBtn);
       container.appendChild(tag);
       input.value = '';
+      updateHiddenTags();
     }
   }
 
-  document.getElementById('tagInput').addEventListener('keypress', function(e) {
+  function updateHiddenTags() {
+    const container = document.getElementById('tagContainer');
+    const hiddenInput = document.getElementById('tagsHidden');
+    const tags = Array.from(container.children)
+      .map(tag => tag.textContent.replace('×', '').trim())
+      .filter(tag => tag);
+    hiddenInput.value = tags.join(' - ');
+  }
+
+  document.getElementById('tagInput')?.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
       addTag();
@@ -372,7 +456,9 @@
   });
 
   // Create Node
-  document.getElementById('createNodeBtn').addEventListener('click', function() {
+  document.getElementById('nodeForm')?.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
     const name = document.getElementById('nodeName').value;
     const tags = Array.from(document.getElementById('tagContainer').children)
                      .map(tag => tag.textContent.replace('×', '').trim())
@@ -388,6 +474,21 @@
       return;
     }
 
+    if (port < 1 || port > 65535) {
+      alert('Port must be between 1 and 65535');
+      return;
+    }
+
+    if (ram < 256) {
+      alert('RAM must be at least 256MB');
+      return;
+    }
+
+    if (disk < 1) {
+      alert('Disk space must be at least 1GB');
+      return;
+    }
+
     const nodeData = {
       name,
       tags: tags.join(' - '),
@@ -398,6 +499,8 @@
       port
     };
 
+    showLoading();
+    
     fetch('/nodes/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -413,6 +516,9 @@
     .catch(error => {
       console.error('Error:', error);
       alert(error.message);
+    })
+    .finally(() => {
+      hideLoading();
     });
   });
 </script>
